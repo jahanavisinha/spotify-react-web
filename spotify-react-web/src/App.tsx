@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import HomePage from "./components/HomePage";
+import ProfilePage from "./components/ProfilePage";
+import AdminPage from "./components/AdminPage";
+import PrivateRoute from "./components/PrivateRoute"; // For protected routes
+import { hasRole } from "./services/authUtils";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const isAuthenticated = () => {
+        // Replace with your actual authentication logic
+        return Boolean(localStorage.getItem("authToken"));
+    };
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    return (
+        <Router>
+            <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-export default App
+                {/* Redirect root path */}
+                <Route path="/" element={isAuthenticated() ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+
+                {/* Private routes */}
+                <Route element={<PrivateRoute />}>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                </Route>
+
+                {/* Admin route with role-based protection */}
+                <Route
+                    path="/admin"
+                    element={
+                        isAuthenticated() && hasRole("admin") ? (
+                            <AdminPage />
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+
+                {/* Catch-all for undefined routes */}
+                <Route path="*" element={<h1>404: Page Not Found</h1>} />
+            </Routes>
+        </Router>
+    );
+};
+
+export default App;
