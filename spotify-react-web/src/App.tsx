@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
+import Dashboard from "./components/Dashboard.tsx";
 
 const extractTokenFromUrl = (): string | null => {
     const hash = window.location.hash;
@@ -26,12 +27,17 @@ const App: React.FC = () => {
         <Router>
             <Routes>
                 {/* Login route */}
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<LoginPage />} />
 
                 {/* Home route */}
                 <Route
                     path="/home"
                     element={isAuthenticated() ? <HomePage /> : <Navigate to="/login" />}
+                />
+
+                <Route
+                    path="/dashboard"
+                    element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
                 />
             </Routes>
         </Router>
