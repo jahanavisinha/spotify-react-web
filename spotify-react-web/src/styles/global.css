@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background-color: #1db954;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+}
+
+.album, .result {
+    margin: 1rem 0;
+}
+
+button {
+    background-color: #1db954;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
