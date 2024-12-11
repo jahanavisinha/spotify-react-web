@@ -1,0 +1,25 @@
+.search-page {
+    min-height: 100vh;
+    padding: 2rem;
+    background: #f7f7f7;
+    font-family: "Roboto", sans-serif;
+}
+
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.result-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.result-card:hover {
+    transform: scale(1.05);
+}
