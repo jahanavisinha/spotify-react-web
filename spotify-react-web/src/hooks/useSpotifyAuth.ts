@@ -44,6 +44,7 @@
 //             // const token = response.access_token;
 //             // if (token) {
 //             //     setToken(token);
+//             console.log(data);
 //                 localStorage.setItem("spotify_token", data);
 //             }
 //     }, []);
@@ -52,7 +53,6 @@
 
 
 import { useEffect, useState } from "react";
-
 const SpotifyAuth = () => {
     const [data, setData] = useState<string | null>(null);
     const client_id = '77693689203b4c61b7c292e35603f65e';

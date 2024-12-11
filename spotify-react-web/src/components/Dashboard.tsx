@@ -29,7 +29,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getUserTopArtists, setSpotifyAuthToken } from "../services/spotifyApi";
-import useSpotifyAuth from "../hooks/useSpotifyAuth";
+import useSpotifyAuth from "../hooks/useSpotifyAuth.ts";
 
 interface Artist {
     id: string;

@@ -28,61 +28,102 @@ export const setSpotifyAuthToken = (token: string) => {
     spotifyApi.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
-// Fetch user-specific data
-export const fetchUserData = async () => {
-    const [topArtists, topTracks] = await Promise.all([
-        getUserTopArtists(),
-        getUserTopTracks(),
-    ]);
-
+// Fetch user's profile information
+export const getUserProfile = async () => {
+    const response = await spotifyApi.get("/me");
     return {
-        topArtists,
-        recentTracks: topTracks, // Assuming top tracks as recent for simplicity
+        display_name: response.data.display_name,
+        followers: response.data.followers,
+        images: response.data.images,
     };
 };
 
-// Fetch trending artists
-export const fetchTrendingArtists = async () => {
-    const response = await spotifyApi.get("/browse/categories/pop/playlists", {
-        params: { country: "US" },
-    });
-
-    const playlists = response.data.playlists.items;
-
-    // Fetch artists from the first playlist as a proxy for "trending artists"
-    if (playlists.length > 0) {
-        const playlistId = playlists[0].id;
-        const playlistTracks = await spotifyApi.get(`/playlists/11dFghVXANMlKmJXsNCbNl/tracks`);
-        const artists = playlistTracks.data.items.map(
-            (item) => item.track.artists[0] // Assuming the first artist
-        );
-
-        return [...new Set(artists.map((artist) => ({ id: artist.id, name: artist.name })))];
-    }
-
-    return [];
-};
-
-// Fetch popular playlists
-export const fetchPopularPlaylists = async () => {
-    const response = await spotifyApi.get("/browse/featured-playlists", {
-        params: { country: "US" },
-    });
-
-    return response.data.playlists.items.map((playlist) => ({
+// Fetch user's playlists
+export const getUserPlaylists = async () => {
+    const response = await spotifyApi.get("/me/playlists");
+    return response.data.items.map((playlist) => ({
         id: playlist.id,
         name: playlist.name,
+        images: playlist.images,
+        tracks: { total: playlist.tracks.total }, // Total number of tracks
     }));
 };
 
-// Fetch user's top artists
-export const getUserTopArtists = async () => {
-    const response = await spotifyApi.get("/me/top/artists");
-    return response.data.items.map((artist) => ({
-        id: artist.id,
-        name: artist.name,
-    }));
+export const fetchUserData = async () => {
+    try {
+        const [topArtists, topTracks] = await Promise.all([
+            getUserTopArtists(),
+            getUserTopTracks(),
+        ]);
+
+        return {
+            topArtists: topArtists || [],
+            recentTracks: topTracks || [], // Default to empty array if undefined
+        };
+    } catch (error) {
+        console.error("Error fetching user data:", error.response || error.message);
+        return { topArtists: [], recentTracks: [] };
+    }
 };
+
+
+export const fetchTrendingArtists = async () => {
+    try {
+        const response = await spotifyApi.get("/browse/categories/pop/playlists", {
+            params: { country: "US" },
+        });
+
+        const playlists = response.data.playlists.items;
+
+        if (playlists.length > 0) {
+            const playlistId = playlists[0].id;
+            const playlistTracks = await spotifyApi.get(`/playlists/${playlistId}/tracks`);
+            const artists = playlistTracks.data.items
+                .map((item) => item.track.artists[0]) // Extract first artist
+                .filter(Boolean); // Ensure no undefined values
+
+            return [...new Set(artists.map((artist) => ({ id: artist.id, name: artist.name })))];
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching trending artists:", error.response || error.message);
+        return [];
+    }
+};
+
+
+export const fetchPopularPlaylists = async () => {
+    try {
+        const response = await spotifyApi.get("/browse/featured-playlists", {
+            params: { country: "US" },
+        });
+
+        return response.data.playlists.items.map((playlist) => ({
+            id: playlist.id,
+            name: playlist.name,
+            images: playlist.images, // Include playlist images
+        }));
+    } catch (error) {
+        console.error("Error fetching popular playlists:", error.response || error.message);
+        return [];
+    }
+};
+
+
+// Fetch user's top artists with error handling
+export const getUserTopArtists = async () => {
+    try {
+        const response = await spotifyApi.get("/me/top/artists");
+        return response.data.items.map((artist) => ({
+            id: artist.id,
+            name: artist.name,
+        }));
+    } catch (error) {
+        console.error("Error fetching user's top artists:", error.response || error.message);
+        return []; // Return an empty array on failure
+    }
+};
+
 
 // Fetch user's top tracks
 export const getUserTopTracks = async () => {
