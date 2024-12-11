@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./LoginPage.css"; // Add this CSS file for styling
+import "./LoginPage.css";
 
 const LoginPage: React.FC = () => {
     const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
@@ -136,4 +136,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-
