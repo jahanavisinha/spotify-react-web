@@ -111,16 +111,20 @@ export const fetchPopularPlaylists = async () => {
 
 
 // Fetch user's top artists with error handling
-export const getUserTopArtists = async () => {
+export const getUserTopArtists = async (): Promise<Artist[]> => {
     try {
-        const response = await spotifyApi.get("/me/top/artists");
-        return response.data.items.map((artist) => ({
+        const response = await axios.get("https://api.spotify.com/v1/me/top/artists", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("spotifyToken")}`,
+            },
+        });
+        return response.data.items.map((artist: any) => ({
             id: artist.id,
             name: artist.name,
         }));
     } catch (error) {
-        console.error("Error fetching user's top artists:", error.response || error.message);
-        return []; // Return an empty array on failure
+        console.error("Error fetching top artists:", error.response || error.message);
+        throw new Error("Failed to fetch top artists");
     }
 };
 

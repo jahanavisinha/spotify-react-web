@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./LoginPage.css"; // Add this CSS file for styling
 
 const LoginPage: React.FC = () => {
     const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
@@ -14,6 +15,7 @@ const LoginPage: React.FC = () => {
     const SPOTIFY_AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
         REDIRECT_URI
     )}&scope=${encodeURIComponent(SCOPES)}`;
+    const SPOTIFY_SIGNUP_URL = "https://www.spotify.com/signup/";
 
     useEffect(() => {
         const fetchTopTrends = async () => {
@@ -61,80 +63,72 @@ const LoginPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-500 to-blue-600 flex flex-col items-center justify-center p-6">
-            <div className="bg-white shadow-2xl rounded-xl p-8 w-full max-w-lg mb-10">
-                <h1 className="text-4xl font-bold text-center mb-6 text-green-600">
-                    Spotify Trends Explorer
-                </h1>
-                <a href={SPOTIFY_AUTH_URL} className="w-full block">
-                    <button className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
-                        Login with Spotify
-                    </button>
+        <div className="login-page">
+            <div className="login-container">
+                <h1 className="title">Spotify Trends Explorer</h1>
+                <a href={SPOTIFY_AUTH_URL} className="auth-button">
+                    Login with Spotify
                 </a>
+                <p className="signup-text">
+                    Don’t have a Spotify account?{" "}
+                    <a href={SPOTIFY_SIGNUP_URL} className="signup-button">
+                        Make one here
+                    </a>
+                </p>
             </div>
 
             {isLoading ? (
-                <div className="text-white text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-white border-opacity-70"></div>
-                    <p className="mt-4">Loading Spotify trends...</p>
+                <div className="loading">
+                    <div className="spinner"></div>
+                    <p>Loading Spotify trends...</p>
                 </div>
             ) : error ? (
-                <div className="text-white text-center">
-                    <p className="text-red-400 font-semibold">{error}</p>
+                <div className="error">
+                    <p>{error}</p>
                 </div>
             ) : (
-                <div className="w-full max-w-4xl">
-                    {/* Top Tracks Section */}
-                    <div className="mb-10">
-                        <h2 className="text-2xl font-semibold text-white mb-4">Top Tracks</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="trends-container">
+                    <section className="trends-section">
+                        <h2 className="section-title">Top Tracks</h2>
+                        <div className="trends-grid">
                             {topTracks.map((track) => (
-                                <div
-                                    key={track.track.id}
-                                    className="bg-white rounded-lg shadow-md p-4 flex items-center space-x-4 hover:scale-105 transition-transform"
-                                >
+                                <div key={track.track.id} className="trend-item">
                                     <img
                                         src={track.track.album.images[0]?.url || "placeholder.jpg"}
                                         alt={track.track.name}
-                                        className="w-16 h-16 rounded-md"
+                                        className="trend-image"
                                     />
                                     <div>
-                                        <p className="text-gray-800 font-semibold truncate">
-                                            {track.track.name}
-                                        </p>
-                                        <p className="text-gray-600 text-sm">
+                                        <p className="trend-title">{track.track.name}</p>
+                                        <p className="trend-subtitle">
                                             {track.track.artists[0]?.name || "Unknown Artist"}
                                         </p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Top Artists Section */}
-                    <div>
-                        <h2 className="text-2xl font-semibold text-white mb-4">Top Artists</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <section className="trends-section">
+                        <h2 className="section-title">Top Artists</h2>
+                        <div className="trends-grid">
                             {topArtists.map((artist) => (
-                                <div
-                                    key={artist.id}
-                                    className="bg-white rounded-lg shadow-md p-4 flex items-center space-x-4 hover:scale-105 transition-transform"
-                                >
+                                <div key={artist.id} className="trend-item">
                                     <img
                                         src={artist.images[0]?.url || "placeholder.jpg"}
                                         alt={artist.name}
-                                        className="w-16 h-16 rounded-full"
+                                        className="trend-image"
                                     />
                                     <div>
-                                        <p className="text-gray-800 font-semibold">{artist.name}</p>
-                                        <p className="text-gray-600 text-sm">
+                                        <p className="trend-title">{artist.name}</p>
+                                        <p className="trend-subtitle">
                                             {artist.followers.total.toLocaleString()} Followers
                                         </p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </section>
                 </div>
             )}
         </div>
@@ -142,3 +136,4 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
+
