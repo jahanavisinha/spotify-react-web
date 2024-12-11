@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import CallbackPage from "./components/CallbackPage";
 import PrivateRoute from "./components/PrivateRoute";
 import ProfilePage from "./components/ProfilePage";
+import SearchPage from "./components/SearchPage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -20,6 +21,8 @@ const App: React.FC = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 <Route path="/profile/:profileId" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+                <Route path="/search" element={<SearchPage />} />
+
             </Routes>
         </Router>
     );
