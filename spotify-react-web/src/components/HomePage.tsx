@@ -65,105 +65,156 @@
 //
 // export default HomePage;
 
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchTrendingArtists, fetchPopularPlaylists, fetchUserData } from "../services/spotifyApi.ts";
+import { fetchTrendingArtists, fetchPopularPlaylists, fetchUserData } from "../services/spotifyApi";
 
-const HomePage = ({ isAuthenticated, accessToken }) => {
+const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
+                                                                                   isAuthenticated,
+                                                                                   accessToken,
+                                                                               }) => {
     const [trendingArtists, setTrendingArtists] = useState([]);
     const [popularPlaylists, setPopularPlaylists] = useState([]);
-    const [userContent, setUserContent] = useState(null);
+    const [userContent, setUserContent] = useState<any>(null);
     const [searchTerm, setSearchTerm] = useState("");
-
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuthenticated) {
-            fetchUserData(accessToken)
-                .then((data) => setUserContent(data))
-                .catch((error) => {
-                    console.error("Failed to fetch user data:", error);
-                });
-        } else {
-            fetchTrendingArtists()
-                .then((data) => setTrendingArtists(data))
-                .catch((error) => {
-                    console.error("Failed to fetch trending artists:", error);
-                });
-            fetchPopularPlaylists()
-                .then((data) => setPopularPlaylists(data))
-                .catch((error) => {
-                    console.error("Failed to fetch popular playlists:", error);
-                });
-        }
+        const fetchData = async () => {
+            try {
+                if (isAuthenticated) {
+                    const data = await fetchUserData(accessToken);
+                    setUserContent(data);
+                } else {
+                    const artists = await fetchTrendingArtists();
+                    setTrendingArtists(artists);
+                    const playlists = await fetchPopularPlaylists();
+                    setPopularPlaylists(playlists);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, [isAuthenticated, accessToken]);
 
-    const handleSearch = (e) => {
+    const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         navigate(`/search?query=${searchTerm}`);
     };
 
     return (
-        <div className="home-page">
-            <header>
-                <h1>Welcome to MusicMatch</h1>
-                {isAuthenticated ? (
-                    <p>Discover music based on your recent activity</p>
-                ) : (
-                    <p>Explore trending music and playlists</p>
-                )}
+        <div className="min-h-screen bg-gradient-to-br from-green-500 to-blue-600 p-6">
+            <header className="text-center text-white mb-6">
+                <h1 className="text-4xl font-bold">Welcome to MusicMatch</h1>
+                <p className="mt-2 text-lg">
+                    {isAuthenticated
+                        ? "Discover music based on your recent activity."
+                        : "Explore trending music and playlists."}
+                </p>
             </header>
 
-            <form onSubmit={handleSearch} className="search-bar">
+            <form
+                onSubmit={handleSearch}
+                className="flex justify-center mb-8"
+            >
                 <input
                     type="text"
                     placeholder="Search for users, artists, or playlists"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full max-w-md px-4 py-2 rounded-l-md focus:outline-none"
                 />
-                <button type="submit">Search</button>
+                <button
+                    type="submit"
+                    className="bg-green-600 text-white font-semibold px-6 py-2 rounded-r-md hover:bg-green-700 transition"
+                >
+                    Search
+                </button>
             </form>
 
-            {!isAuthenticated ? (
-                <div>
-                    <section className="trending-artists">
-                        <h3>Trending Artists</h3>
-                        <ul>
-                            {trendingArtists.map((artist) => (
-                                <li key={artist.id}>{artist.name}</li>
-                            ))}
-                        </ul>
-                    </section>
-
-                    <section className="popular-playlists">
-                        <h3>Popular Playlists</h3>
-                        <ul>
-                            {popularPlaylists.map((playlist) => (
-                                <li key={playlist.id}>{playlist.name}</li>
-                            ))}
-                        </ul>
-                    </section>
+            {loading ? (
+                <div className="text-white text-center">
+                    <p>Loading content...</p>
                 </div>
             ) : (
-                <div>
-                    <section className="user-content">
-                        <h3>Your Personalized Content</h3>
-                        <ul>
-                            {userContent?.recentTracks?.map((track) => (
-                                <li key={track.id}>{track.name} - {track.artist}</li>
-                            ))}
-                        </ul>
-                    </section>
+                <div className="space-y-10">
+                    {!isAuthenticated ? (
+                        <>
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">Trending Artists</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {trendingArtists.map((artist) => (
+                                        <div
+                                            key={artist.id}
+                                            className="bg-white p-4 rounded-md shadow-md flex items-center space-x-4 hover:scale-105 transition-transform"
+                                        >
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-gray-800">{artist.name}</h3>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
 
-                    <section className="user-top">
-                        <h3>Your Top Artists</h3>
-                        <ul>
-                            {userContent?.topArtists?.map((artist) => (
-                                <li key={artist.id}>{artist.name}</li>
-                            ))}
-                        </ul>
-                    </section>
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">Popular Playlists</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {popularPlaylists.map((playlist) => (
+                                        <div
+                                            key={playlist.id}
+                                            className="bg-white p-4 rounded-md shadow-md flex items-center space-x-4 hover:scale-105 transition-transform"
+                                        >
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-gray-800">{playlist.name}</h3>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </>
+                    ) : (
+                        <>
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">
+                                    Your Personalized Content
+                                </h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {userContent?.recentTracks?.map((track) => (
+                                        <div
+                                            key={track.id}
+                                            className="bg-white p-4 rounded-md shadow-md flex items-center space-x-4 hover:scale-105 transition-transform"
+                                        >
+                                            <div>
+                                                <h3 className="font-semibold text-gray-800">{track.name}</h3>
+                                                <p className="text-gray-600 text-sm">{track.artist}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">Your Top Artists</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {userContent?.topArtists?.map((artist) => (
+                                        <div
+                                            key={artist.id}
+                                            className="bg-white p-4 rounded-md shadow-md flex items-center space-x-4 hover:scale-105 transition-transform"
+                                        >
+                                            <div>
+                                                <h3 className="font-semibold text-gray-800">{artist.name}</h3>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </>
+                    )}
                 </div>
             )}
         </div>
