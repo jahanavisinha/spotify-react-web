@@ -10,6 +10,7 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
 }
 
 .navbar-title a {
@@ -22,21 +23,34 @@
 .navbar-links {
     display: flex;
     gap: 16px;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    justify-content: center; /* Center buttons on smaller screens */
 }
 
-.navbar-button {
+.navbar-button,
+.logout-button {
     background-color: #48bb78; /* Lighter green */
     color: white;
     font-weight: bold;
     padding: 8px 16px;
     border-radius: 8px;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s ease;
     border: none; /* Optional: Remove border */
+    white-space: nowrap; /* Prevent text from breaking */
+    cursor: pointer;
+    text-align: center; /* Ensure proper alignment */
 }
 
-.navbar-button:hover {
+.navbar-button:hover,
+.logout-button:hover {
     background-color: #2f855a; /* Darker green */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+.navbar-button:active,
+.logout-button:active {
+    transform: translateY(0); /* Reset lift effect */
 }
 
 .navbar-button:last-child {
@@ -45,4 +59,31 @@
 
 .navbar-button:last-child:hover {
     background-color: #285e61; /* Darker teal */
+}
+
+.logout-button {
+    background-color: #e53e3e; /* Red background */
+}
+
+.logout-button:hover {
+    background-color: #c53030; /* Darker red */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
+    }
+
+    .navbar-links {
+        gap: 8px; /* Reduce spacing between buttons */
+        margin-top: 8px; /* Add some spacing between title and buttons */
+    }
+
+    .navbar-button,
+    .logout-button {
+        width: 100%; /* Make buttons full-width */
+        text-align: center;
+    }
 }
