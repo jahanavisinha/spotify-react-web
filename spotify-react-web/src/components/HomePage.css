@@ -106,3 +106,17 @@
     font-size: 1.2rem;
     color: #b3b3b3;
 }
+
+.card-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* Ensures the image is cropped to fit */
+    border-radius: 50%; /* Makes the image circular */
+    margin-bottom: 1rem;
+    border: 3px solid #1db954; /* Green border to match the theme */
+    transition: transform 0.3s ease;
+}
+
+.card-image:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+}

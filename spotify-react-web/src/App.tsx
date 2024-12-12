@@ -41,6 +41,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import ProfilePage from "./components/ProfilePage";
 import SearchPage from "./components/SearchPage";
 import UserRegistration from "./registration/UserRegistration.tsx";
+import FeedPage from "./components/FeedPage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -56,6 +57,7 @@ const App: React.FC = () => {
                 <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 <Route path="/profile/:profileId" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/feed" element={<FeedPage />} />
             </Routes>
         </Router>
     );

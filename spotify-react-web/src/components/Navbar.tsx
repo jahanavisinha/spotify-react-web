@@ -21,6 +21,11 @@ const Navbar: React.FC = () => {
                         </Link>
                     </li>
                     <li>
+                        <Link to="/feed" className="navbar-button">
+                            Feed
+                        </Link>
+                    </li>
+                    <li>
                         <Link to="/profile" className="navbar-button">
                             Profile
                         </Link>

@@ -1,0 +1,138 @@
+.feed-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: "Roboto", sans-serif; /* Ensure consistent font usage */
+    color: #333;
+    background: linear-gradient(to bottom right, #ffffff, #f7f7f7); /* Subtle gradient background */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.feed-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1db954;
+    margin-bottom: 2rem;
+}
+
+.feed-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feed-form input,
+.feed-form textarea,
+.feed-form select {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: "Roboto", sans-serif;
+}
+
+.feed-form input:focus,
+.feed-form textarea:focus,
+.feed-form select:focus {
+    border-color: #1db954;
+    box-shadow: 0 0 6px rgba(29, 185, 84, 0.5);
+}
+
+.feed-form button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: #1db954;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Roboto", sans-serif;
+}
+
+.feed-form button:hover {
+    background-color: #17a348;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(23, 163, 72, 0.2);
+}
+
+.feed-form button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.feed-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feed-post {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Roboto", sans-serif;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feed-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.feed-post h3 {
+    color: #1db954;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+}
+
+.feed-post p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.feed-post strong {
+    color: #333;
+}
+
+.feed-post .emotion {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1db954;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Improve responsiveness */
+@media (max-width: 768px) {
+    .feed-page {
+        padding: 1rem;
+    }
+
+    .feed-title {
+        font-size: 2rem;
+    }
+
+    .feed-form button {
+        font-size: 1rem;
+    }
+
+    .feed-post h3 {
+        font-size: 1.5rem;
+    }
+}
