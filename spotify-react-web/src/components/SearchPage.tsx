@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import "./SearchPage.css"; // Add styles here
+import "./SearchPage.css";
+import {fetchSearchResults} from "../services/spotifyApi.ts";
 
 const SearchPage: React.FC = () => {
     const [searchParams] = useSearchParams();
