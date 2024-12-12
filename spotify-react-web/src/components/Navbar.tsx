@@ -25,6 +25,16 @@ const Navbar: React.FC = () => {
                             Profile
                         </Link>
                     </li>
+                    <li>
+                        <Link to="/register" className="navbar-button">
+                            Create Profile
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/login" className="navbar-button">
+                            Login
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </nav>

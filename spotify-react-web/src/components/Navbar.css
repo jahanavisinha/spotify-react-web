@@ -32,8 +32,17 @@
     border-radius: 8px;
     text-decoration: none;
     transition: background-color 0.3s;
+    border: none; /* Optional: Remove border */
 }
 
 .navbar-button:hover {
     background-color: #2f855a; /* Darker green */
+}
+
+.navbar-button:last-child {
+    background-color: #319795; /* Teal background for "Login" */
+}
+
+.navbar-button:last-child:hover {
+    background-color: #285e61; /* Darker teal */
 }
