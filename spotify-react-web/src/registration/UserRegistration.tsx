@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './UserRegistration.css'; // Import the CSS file
+import * as Client from "./Client.ts"
+import './UserRegistration.css';
 
 const UserRegistration: React.FC = () => {
+    const signup = async () => {
+        const currentUser = await Client.signup({
+            username,
+            email,
+            password,
+        });
+    }
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -10,10 +18,10 @@ const UserRegistration: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
+            const response = await axios.post('http://localhost:5000/api/users', {
                 username,
                 email,
-                password
+                password,
             });
             console.log(response.data);
             alert('Registration successful! Please log in.');
@@ -22,6 +30,7 @@ const UserRegistration: React.FC = () => {
             alert('Registration failed. Please try again.');
         }
     };
+
 
     return (
         <div className="registration-container">

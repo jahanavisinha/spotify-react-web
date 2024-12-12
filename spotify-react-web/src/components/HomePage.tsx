@@ -220,7 +220,7 @@ const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
                 <p className="homepage-subtitle">
                     {isAuthenticated
                         ? "Discover music based on your recent activity."
-                        : "Explore trending music and playlists."}
+                        : "A place to dive deep into your music taste and post your favorites on others' feed!"}
                 </p>
             </header>
 
