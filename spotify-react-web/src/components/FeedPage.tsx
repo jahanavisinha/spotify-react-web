@@ -7,6 +7,9 @@ interface Post {
     reason: string;
     memory: string;
     emotion: string;
+    upvotes: number;
+    downvotes: number;
+    createdAt: string; // ISO string for simplicity
 }
 
 const FeedPage: React.FC = () => {
@@ -26,6 +29,9 @@ const FeedPage: React.FC = () => {
             reason,
             memory,
             emotion,
+            upvotes: 0,
+            downvotes: 0,
+            createdAt: new Date().toISOString(),
         };
 
         setPosts([newPost, ...posts]); // Add new post to the feed
@@ -34,6 +40,18 @@ const FeedPage: React.FC = () => {
         setReason("");
         setMemory("");
         setEmotion("");
+    };
+
+    const handleUpvote = (index: number) => {
+        const updatedPosts = [...posts];
+        updatedPosts[index].upvotes += 1;
+        setPosts(updatedPosts);
+    };
+
+    const handleDownvote = (index: number) => {
+        const updatedPosts = [...posts];
+        updatedPosts[index].downvotes += 1;
+        setPosts(updatedPosts);
     };
 
     return (
@@ -97,6 +115,23 @@ const FeedPage: React.FC = () => {
                         <p>
                             <strong>Emotion:</strong> {post.emotion}
                         </p>
+                        <p>
+                            <strong>Posted On:</strong> {new Date(post.createdAt).toLocaleString()}
+                        </p>
+                        <div className="post-actions">
+                            <button
+                                className="upvote-button"
+                                onClick={() => handleUpvote(index)}
+                            >
+                                👍 {post.upvotes}
+                            </button>
+                            <button
+                                className="downvote-button"
+                                onClick={() => handleDownvote(index)}
+                            >
+                                👎 {post.downvotes}
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

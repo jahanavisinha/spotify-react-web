@@ -27,8 +27,7 @@
     justify-content: center; /* Center buttons on smaller screens */
 }
 
-.navbar-button,
-.logout-button {
+.navbar-button {
     background-color: #48bb78; /* Lighter green */
     color: white;
     font-weight: bold;
@@ -42,31 +41,36 @@
     text-align: center; /* Ensure proper alignment */
 }
 
-.navbar-button:hover,
-.logout-button:hover {
+.navbar-button:hover {
     background-color: #2f855a; /* Darker green */
     transform: translateY(-2px); /* Lift effect */
 }
 
-.navbar-button:active,
-.logout-button:active {
+.navbar-button:active {
     transform: translateY(0); /* Reset lift effect */
-}
-
-.navbar-button:last-child {
-    background-color: #319795; /* Teal background for "Login" */
-}
-
-.navbar-button:last-child:hover {
-    background-color: #285e61; /* Darker teal */
 }
 
 .logout-button {
     background-color: #e53e3e; /* Red background */
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s ease;
+    border: none;
+    white-space: nowrap;
+    cursor: pointer;
+    text-align: center;
 }
 
 .logout-button:hover {
     background-color: #c53030; /* Darker red */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+.logout-button:active {
+    transform: translateY(0); /* Reset lift effect */
 }
 
 /* Media query for smaller screens */

@@ -172,22 +172,27 @@ export const fetchPopularPlaylists = async () => {
 // Fetch search results for a query
 export const fetchSearchResults = async (query: string) => {
     try {
-        if (!isTokenValid()) {
-            throw new Error("Invalid or expired token");
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) throw new Error("No access token found");
+
+        const response = await fetch(
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track,artist,album`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Spotify API error: ${response.statusText}`);
         }
 
-        const response = await spotifyApi.get("/search", {
-            params: {
-                q: query,
-                type: "artist,track,album,playlist",
-                limit: 10,
-            },
-        });
-
-        return response.data;
+        const data = await response.json();
+        return data.tracks?.items || []; // Adjust based on the response structure
     } catch (error) {
-        handleSpotifyError(error);
-        throw new Error("Failed to fetch search results");
+        console.error("Error in fetchSearchResults:", error);
+        throw error;
     }
 };
 
