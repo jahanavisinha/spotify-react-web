@@ -439,7 +439,7 @@ export const setSpotifyAuthToken = async () => {
     if (isTokenExpired()) {
         await refreshToken();
     }
-    const token = localStorage.getItem("spotifyToken");
+    const token = localStorage.getItem("spotify_token");
     if (token) {
         spotifyApi.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
@@ -449,7 +449,7 @@ export const setSpotifyAuthToken = async () => {
 
 // Helper to check if token is expired
 export const isTokenExpired = (): boolean => {
-    const expiry = localStorage.getItem("spotifyTokenExpiry");
+    const expiry = localStorage.getItem("spotify_token_expiry");
     return !expiry || Date.now() > parseInt(expiry, 10);
 };
 

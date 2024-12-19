@@ -1,10 +1,11 @@
 import axios from "axios";
+import useSpotifyAuth from "../hooks/useSpotifyAuth.ts";
+import SpotifyAuth from "../hooks/useSpotifyAuth.ts";
 
 // Create an Axios instance for Spotify API
 export const spotifyApi = axios.create({
     baseURL: "https://api.spotify.com/v1",
 });
-
 
 
 // Set Authorization Header for Spotify API
@@ -14,8 +15,9 @@ export const setSpotifyAuthToken = (token: string) => {
 
 // Token validation helper
 export const isTokenValid = (): boolean => {
-    const token = localStorage.getItem("spotifyToken");
-    const expiryTime = parseInt(localStorage.getItem("spotifyTokenExpiry") || "0", 10);
+    const token = localStorage.getItem("spotify_token");
+    const expiryTime = parseInt(localStorage.getItem("spotify_token_expiry") || "0", 10);
+    console.log("From istokenvalid expirytime", expiryTime)
     return token !== null && Date.now() < expiryTime;
 };
 
@@ -55,7 +57,7 @@ export const getUserPlaylists = async () => {
             id: playlist.id,
             name: playlist.name,
             images: playlist.images,
-            tracks: { total: playlist.tracks.total }, // Total number of tracks
+            tracks: {total: playlist.tracks.total}, // Total number of tracks
         }));
     } catch (error) {
         handleSpotifyError(error);
@@ -69,13 +71,19 @@ export const getUserTopArtists = async (): Promise<Artist[]> => {
         if (!isTokenValid()) {
             throw new Error("Invalid or expired token");
         }
-
-        const response = await spotifyApi.get("/me/top/artists");
+        const token = localStorage.getItem("spotify_token");
+        const response = await spotifyApi.get("/me/top/artists", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        console.log("first artist", response.data.items[0].images[0].url)
         return response.data.items.map((artist: any) => ({
             id: artist.id,
             name: artist.name,
             followers: artist.followers?.total,
             images: artist.images,
+            image: artist.images[0].url
         }));
     } catch (error) {
         handleSpotifyError(error);
@@ -89,8 +97,13 @@ export const getUserTopTracks = async () => {
         if (!isTokenValid()) {
             throw new Error("Invalid or expired token");
         }
+        const token = localStorage.getItem("spotify_token");
 
-        const response = await spotifyApi.get("/me/top/tracks");
+        const response = await spotifyApi.get("/me/top/tracks", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
         return response.data.items.map((track: any) => ({
             id: track.id,
             name: track.name,
@@ -109,6 +122,7 @@ export const fetchUserData = async () => {
             getUserTopArtists(),
             getUserTopTracks(),
         ]);
+        console.log("This is in fetchUserData", topArtists)
 
         return {
             topArtists: topArtists || [],
@@ -116,7 +130,7 @@ export const fetchUserData = async () => {
         };
     } catch (error) {
         handleSpotifyError(error);
-        return { topArtists: [], recentTracks: [] };
+        return {topArtists: [], recentTracks: []};
     }
 };
 
@@ -128,7 +142,7 @@ export const fetchTrendingArtists = async () => {
         }
 
         const response = await spotifyApi.get("/browse/categories/pop/playlists", {
-            params: { country: "US" },
+            params: {country: "US"},
         });
 
         const playlists = response.data.playlists.items;
@@ -140,7 +154,7 @@ export const fetchTrendingArtists = async () => {
                 .map((item: any) => item.track.artists[0]) // Extract first artist
                 .filter(Boolean); // Ensure no undefined values
 
-            return [...new Set(artists.map((artist: any) => ({ id: artist.id, name: artist.name })))];
+            return [...new Set(artists.map((artist: any) => ({id: artist.id, name: artist.name})))];
         }
         return [];
     } catch (error) {
@@ -157,7 +171,7 @@ export const fetchPopularPlaylists = async () => {
         }
 
         const response = await spotifyApi.get("/browse/featured-playlists", {
-            params: { country: "US" },
+            params: {country: "US"},
         });
 
         return response.data.playlists.items.map((playlist: any) => ({

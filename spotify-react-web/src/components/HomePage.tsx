@@ -175,10 +175,12 @@ const topSongs = [
     { id: 5, name: "Jingle Bell Rock", artist: "Bobby Helms", image: "https://m.media-amazon.com/images/I/81TYjkfc9uL._UF1000,1000_QL80_DpWeblab_.jpg" },
 ];
 
-const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
-                                                                                   isAuthenticated,
-                                                                                   accessToken,
-                                                                               }) => {
+interface HomePageProps {
+    isAuthenticated: boolean;
+    accessToken: string;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ isAuthenticated, accessToken }) => {
     const [trendingArtists, setTrendingArtists] = useState([]);
     const [popularPlaylists, setPopularPlaylists] = useState([]);
     const [userContent, setUserContent] = useState<any>(null);
@@ -190,7 +192,8 @@ const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
         const fetchData = async () => {
             try {
                 if (isAuthenticated) {
-                    const data = await fetchUserData(accessToken);
+                    const data = await fetchUserData();
+                    console.log(data.topArtists)
                     setUserContent(data);
                 } else {
                     const artists = await fetchTrendingArtists();
@@ -283,10 +286,13 @@ const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
                             </section>
 
                             <section>
-                                <h2 className="section-title">Your Top Artists</h2>
+                                <h2 className="section-title">Your Personalized Content</h2>
+                                <h2 className="section-title">Popular Artists of the Week</h2>
                                 <div className="grid-container">
                                     {userContent?.topArtists?.map((artist) => (
                                         <div key={artist.id} className="card">
+                                            <img src={artist.image} alt={artist.name}
+                                                 className="card-image"/>
                                             <h3 className="card-title">{artist.name}</h3>
                                         </div>
                                     ))}
@@ -296,7 +302,8 @@ const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
                     ) : (
                         <>
                             <section>
-                                <h2 className="section-title">Trending Artists (Personalized- Login to View)</h2>
+                                <h2 className="section-title">Trending Artists (Personalized- Login
+                                    to View)</h2>
                                 <div className="grid-container">
                                     {trendingArtists.map((artist) => (
                                         <div key={artist.id} className="card">
@@ -307,7 +314,8 @@ const HomePage: React.FC<{ isAuthenticated: boolean; accessToken: string }> = ({
                             </section>
 
                             <section>
-                                <h2 className="section-title">Your Top Playlists (Personalized- Login to View)</h2>
+                                <h2 className="section-title">Your Top Playlists (Personalized-
+                                    Login to View)</h2>
                                 <div className="grid-container">
                                     {popularPlaylists.map((playlist) => (
                                         <div key={playlist.id} className="card">

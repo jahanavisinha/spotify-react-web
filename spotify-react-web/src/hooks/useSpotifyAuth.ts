@@ -46,6 +46,7 @@ const SpotifyAuth = () => {
     // Function to fetch track information using the access token
     async function getTrackInfo(access_token: string) {
         try {
+            console.error("error in getting track info");
             const response = await fetch(
                 "https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7FjRGTy/tracks",
                 {
@@ -73,6 +74,7 @@ const SpotifyAuth = () => {
 
     useEffect(() => {
         if (!isTokenValid()) {
+            console.log("check token is invalid");
             getToken().then((newToken) => {
                 if (newToken) {
                     getTrackInfo(newToken).then((trackInfo) => {
