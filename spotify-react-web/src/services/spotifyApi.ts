@@ -5,6 +5,8 @@ export const spotifyApi = axios.create({
     baseURL: "https://api.spotify.com/v1",
 });
 
+
+
 // Set Authorization Header for Spotify API
 export const setSpotifyAuthToken = (token: string) => {
     spotifyApi.defaults.headers.common["Authorization"] = `Bearer ${token}`;

@@ -1,49 +1,3 @@
-// import { useEffect, useState } from "react";
-// const SpotifyAuth = () => {
-//     const [data, setData] = useState<string | null>(null);
-//     const client_id = '77693689203b4c61b7c292e35603f65e';
-//     const client_secret = '5318e4996d0b4e588cbae945996a62ad';
-//
-//     async function getToken() {
-//         const response = await fetch('https://accounts.spotify.com/api/token', {
-//             method: 'POST',
-//             body: new URLSearchParams({
-//                 'grant_type': 'client_credentials',
-//             }),
-//             headers: {
-//                 'Content-Type': 'application/x-www-form-urlencoded',
-//                 'Authorization': 'Basic ' + btoa(`${client_id}:${client_secret}`),
-//             },
-//         });
-//         const tokenResponse = await response.json();
-//         setData(tokenResponse.access_token);
-//         return tokenResponse;
-//     }
-//
-//     async function getTrackInfo(access_token: string) {
-//         const response = await fetch("https://api.spotify.com/v1/albums/4aawyAB9vmqN3uQ7FjRGTy/tracks", {
-//             method: 'GET',
-//             headers: { 'Authorization': 'Bearer ' + access_token },
-//         });
-//
-//         return await response.json();
-//     }
-//
-//     useEffect(() => {
-//         getToken().then(response => {
-//             if (response.access_token) {
-//                 getTrackInfo(response.access_token).then(profile => {
-//                     console.log(profile);
-//                 });
-//             }
-//         });
-//     }, []);
-//
-//     return data || localStorage.getItem("spotify_token");
-// };
-//
-// export default SpotifyAuth;
-
 import { useEffect, useState } from "react";
 
 const SpotifyAuth = () => {
@@ -54,6 +8,7 @@ const SpotifyAuth = () => {
     // Function to fetch Spotify access token
     async function getToken() {
         try {
+            console.log("hello");
             const response = await fetch("https://accounts.spotify.com/api/token", {
                 method: "POST",
                 body: new URLSearchParams({
@@ -71,6 +26,7 @@ const SpotifyAuth = () => {
 
             const tokenResponse = await response.json();
             const accessToken = tokenResponse.access_token;
+            console.log("access token", accessToken);
 
             // Save token to state and local storage
             setToken(accessToken);
